@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: webpage
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn run:app
+    envVars:
+      - key: FLASK_ENV
+        value: production
