@@ -2,3 +2,15 @@ google-api-python-client
 google-auth
 google-auth-httplib2
 google-auth-oauthlib
+
+Flask
+gunicorn
+python-dotenv
+requests
+pandas
+numpy
+scikit-learn
+scipy
+google
+google-api-python-client
+google-auth-oauthlib
