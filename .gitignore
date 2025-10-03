@@ -1,13 +1,12 @@
-# Python cache
 __pycache__/
-*.pyc
-
-# Environment files
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.DS_Store
 .env
-
-# Google Drive credentials and tokens
-credentials.json
 token.json
-
-# Local databases / test files
-*.db
+credentials.json
+data.db
+dist/
+build/
