@@ -1,0 +1,13 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment files
+.env
+
+# Google Drive credentials and tokens
+credentials.json
+token.json
+
+# Local databases / test files
+*.db

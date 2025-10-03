@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dataset Query & Clustering</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Dataset Query & Clustering</h1>
+
+    <!-- Global Status Bar -->
+    <section class="card">
+      <div id="status" class="status"></div>
+    </section>
+
+    <div id="dataset-status" class="status-bar">
+      <span id="ds-label">
+        <span class="ds-name">Dataset: —</span>
+        <span class="ds-id"></span>
+        <span class="ds-src"></span>
+      </span>
+      <span id="ds-rows" class="ds-rows">Rows: —</span>
+    </div>
+
+
+    <!-- Toggle between Visual Query and SQL -->
+    <section class="card">
+      <label>
+        <input type="checkbox" id="toggle-sql" />
+        Enable SQL Mode
+      </label>
+    </section>
+
+    <!-- Visual Query Builder -->
+    <section id="query-builder" class="card">
+      <h2>1) Build a Query</h2>
+      <div id="builder-filters"></div>
+      <button id="add-filter">+ Add Filter</button>
+        <div class="builder-row" style="display:flex;align-items:center;gap:.5rem;margin:.5rem 0;">
+            <label for="builder-limit" style="min-width:60px">Limit</label>
+            <input
+              type="number"
+              id="builder-limit"
+              min="1"
+              step="1"
+              value="1000"
+              placeholder="e.g. 1000"
+              style="max-width:140px"
+            />
+          </div>
+      <button id="run-builder">Run Query</button>
+    </section>
+
+    <!-- SQL Query -->
+    <section id="sql-mode" class="card" style="display:none">
+      <h2>1) Run a SQL Query</h2>
+      <textarea id="sql-input" spellcheck="false" rows="5" placeholder="e.g., SELECT * FROM data LIMIT 150;"></textarea>
+      <div class="actions">
+        <button id="run-btn">Run Query</button>
+      </div>
+    </section>
+
+    <!-- Switch Dataset -->
+    <section class="card">
+      <h2>Switch Dataset</h2>
+
+      <!-- Quick dataset switcher -->
+      <div class="param-row">
+        <label for="dataset-select">Quick Select:</label>
+        <select id="dataset-select">
+          <option value="">-- Loading datasets --</option>
+        </select>
+        <button id="load-preset-dataset" type="button">Load Dataset</button>
+      </div>
+
+      <div class="hint">Choose from predefined datasets (if configured in the server).</div>
+
+      <hr style="margin: 1em 0; opacity: 0.2;" />
+
+      <!-- Upload from computer -->
+      <div class="param-row">
+        <label for="csv-file">Upload CSV:</label>
+        <input type="file" id="csv-file" accept=".csv" />
+        <button id="upload-csv" type="button">Upload</button>
+      </div>
+
+      <div class="hint">Choose a .csv file from your computer. The server will replace the <code>data</code> table.</div>
+
+      <hr style="margin: 1em 0; opacity: 0.2;" />
+
+      <!-- Or load from Google Drive by FILE ID -->
+      <div class="param-row">
+        <label for="drive-file-id">Google Drive File ID:</label>
+        <input id="drive-file-id" type="text" placeholder="e.g., 1a2B3cD4EfGhIjKlMnOpQrStUvWxYz" />
+        <button id="load-by-id" type="button">Load by Drive ID</button>
+      </div>
+
+      <p class="hint">
+        In Google Drive, share the CSV as "Anyone with the link – Viewer", then copy the URL and extract the file ID
+        (the long string in <code>/file/d/&lt;ID&gt;/view</code> or the <code>id=</code> parameter).
+      </p>
+    </section>
+
+    <!-- Spatial Filter -->
+    <section class="card">
+      <h2>2) Spatial filter (radius by address)</h2>
+      <div class="radius-grid">
+        <div id="address-wrap" class="param-row address-wrap">
+          <label for="address">Center address:</label>
+          <input id="address" type="text" placeholder="🇨🇦 e.g., 123 Main St, Toronto ON or CN Tower" autocomplete="off" />
+          <ul id="address-suggestions" class="suggestions" hidden></ul>
+
+          <label for="radius-km">Radius (km):</label>
+          <input id="radius-km" type="number" step="0.1" min="0.1" value="10" />
+        </div>
+        <div class="button-row">
+          <button id="radius-btn">Filter Current Results</button>
+        </div>
+      </div>
+      <p class="hint">
+        Start typing an address and pick a suggestion. We'll geocode to coordinates and keep rows within the radius.
+        Adds a <code>distance_km</code> column.
+      </p>
+    </section>
+
+    <!-- Clustering -->
+    <section class="card">
+      <h2>3) Cluster the CURRENT Query Results</h2>
+
+      <div class="cluster-grid">
+        <div class="method-row">
+          <label for="cluster-method">Method:</label>
+          <select id="cluster-method">
+            <option value="population">Population-based (custom)</option>
+            <option value="kmeans">K-Means</option>
+          </select>
+        </div>
+
+        <!-- Population-based params -->
+        <div id="population-params">
+          <div class="param-row">
+            <label for="target-pop">Target population per cluster:</label>
+            <input id="target-pop" type="number" min="100" value="1000" />
+          </div>
+
+          <div class="param-row">
+            <label for="tolerance">Tolerance (%):</label>
+            <input id="tolerance" type="number" min="5" max="50" value="10" />
+            <small>Allowed deviation from target population (5-50%)</small>
+          </div>
+
+          <div class="param-row">
+            <label for="min-cluster-size">Minimum cluster size:</label>
+            <input id="min-cluster-size" type="number" min="50" placeholder="Auto" />
+            <small>Leave blank for automatic calculation</small>
+          </div>
+
+          <div class="checkbox-row">
+            <label class="checkbox-label">
+              <input id="allow-outliers" type="checkbox" checked />
+              <span>Allow outliers</span>
+            </label>
+            <small>DAs that don't fit well can be marked as outliers</small>
+          </div>
+
+          <div id="outlier-params" class="param-row">
+            <label for="outlier-distance">Outlier distance threshold (km):</label>
+            <input id="outlier-distance" type="number" min="5" value="50" />
+            <small>Maximum distance from cluster center</small>
+          </div>
+        </div>
+
+        <!-- K-Means params -->
+        <div id="kmeans-params" class="param-row" style="display:none">
+          <label for="num-clusters"># of clusters</label>
+          <input id="num-clusters" type="number" min="2" value="10" />
+        </div>
+
+        <div class="button-row">
+          <button id="cluster-btn" type="button">Run Clustering</button>
+        </div>
+      </div>
+
+      <p class="hint">
+        Tip: run a query first, then pick a method and click "Run Clustering". The map will show clusters
+        and lets you expand to see DAs inside each cluster.
+      </p>
+    </section>
+
+    <!-- Map and Download Actions -->
+    <section class="card">
+      <div class="actions">
+        <button id="map-btn" disabled>Show Map</button>
+        <button id="download-btn" disabled>Download CSV</button>
+      </div>
+    </section>
+
+    <!-- Results Table -->
+    <section class="card">
+      <div class="table-toolbar">
+        <div><strong>Rows:</strong> <span id="row-count">0</span></div>
+        <div class="pager">
+          <button id="prev-page" disabled>&laquo; Prev</button>
+          <span>Page <input id="page-input" type="number" min="1" value="1" /> of <span id="total-pages">1</span></span>
+          <button id="next-page" disabled>Next &raquo;</button>
+          <select id="page-size">
+            <option value="10">10 / page</option>
+            <option value="25" selected>25 / page</option>
+            <option value="50">50 / page</option>
+            <option value="100">100 / page</option>
+          </select>
+        </div>
+      </div>
+      <div id="results" class="table-wrap"></div>
+    </section>
+  </div>
+
+  <script type="module" src="/static/js/main.js"></script>
+</body>
+</html>

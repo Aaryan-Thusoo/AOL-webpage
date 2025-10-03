@@ -1,0 +1,7 @@
+median_age_of_the_population
+average_after_tax_income_in_2020
+average_household_size
+latitude
+longitude
+LATITUDE
+LONGITUDE

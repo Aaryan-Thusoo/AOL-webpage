@@ -1,0 +1,724 @@
+:root {
+  --bg: #0f1115;
+  --card: #151923;
+  --muted: #aab4c0;
+  --text: #e8edf2;
+  --accent: #4da3ff;
+  --accent-2: #53d6a1;
+  --danger: #ff5c7c;
+  --border: #23293a;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 32px auto;
+  padding: 0 16px;
+}
+
+h1 {
+  font-size: 28px;
+  margin: 0 0 16px 0;
+  letter-spacing: 0.2px;
+}
+
+h2 {
+  font-size: 18px;
+  margin: 0 0 12px 0;
+  color: var(--muted);
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 18px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+}
+
+/* Dataset Info Styling */
+.dataset-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 24px;
+  margin-bottom: 16px;
+  padding: 12px;
+  background: #0a0e14;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-label {
+  font-weight: 600;
+  color: var(--muted);
+  min-width: 80px;
+}
+
+.status-loaded {
+  color: var(--accent-2);
+  font-weight: 600;
+}
+
+.status-empty {
+  color: var(--muted);
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .dataset-info {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .info-label {
+    min-width: 60px;
+  }
+}
+
+textarea#sql-input {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #0d1017;
+  color: var(--text);
+  outline: none;
+  resize: vertical;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+button {
+  background: var(--accent);
+  color: #08111d;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+button:hover { filter: brightness(1.05); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+#download-btn {
+  background: var(--accent-2);
+}
+
+.status {
+  margin-top: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: #101521;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  white-space: pre-wrap;
+}
+.status.success { color: #a7f3ce; border-color: #2a614f; }
+.status.error { color: #ffc1cd; border-color: #5d2330; }
+
+.cluster-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.method-row, .param-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.button-row {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.hint {
+  color: var(--muted);
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+
+.table-wrap {
+  width: 100%;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+thead th {
+  position: sticky;
+  top: 0;
+  background: #0f1422;
+  color: var(--muted);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  padding: 10px;
+  white-space: nowrap;
+  z-index: 1;
+}
+tbody td {
+  border-bottom: 1px solid var(--border);
+  padding: 10px;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pager input[type="number"] {
+  width: 70px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #0d1017;
+  color: var(--text);
+}
+.pager select {
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #0d1017;
+  color: var(--text);
+}
+
+/* Spatial radius (address) panel */
+.radius-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+.radius-grid .param-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+.radius-grid input[type="text"],
+.radius-grid input[type="number"] {
+  width: 260px;
+  max-width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #0d1017;
+  color: var(--text);
+}
+
+/* Simple suggestions dropdown */
+.address-wrap {
+  position: relative;
+}
+.suggestions {
+  position: absolute;
+  left: 130px;           /* aligns under the address input next to label */
+  top: 38px;             /* below the input */
+  right: auto;
+  min-width: 320px;
+  max-width: 560px;
+  list-style: none;
+  margin: 4px 0 0 0;
+  padding: 6px 0;
+  background: #0f1422;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+  z-index: 5;
+}
+.suggestions li {
+  padding: 8px 12px;
+  cursor: pointer;
+  color: var(--text);
+}
+.suggestions li:hover,
+.suggestions li:focus {
+  background: #16203a;
+  outline: none;
+}
+
+/* Enhanced clustering parameter controls */
+#population-params {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 16px;
+  background: #0a0e14;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.param-row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.param-row input[type="number"] {
+  width: 120px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #0d1017;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.param-row small {
+  grid-column: 2;
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: -8px;
+}
+
+/* Checkbox styling */
+.checkbox-row {
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.checkbox-label input[type="checkbox"] {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.checkmark {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: #0d1017;
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkmark {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.checkmark::after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: solid #08111d;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkmark::after {
+  display: block;
+}
+
+/* Parameter explanation box */
+.param-explanation {
+  grid-column: 1 / -1;
+  padding: 12px;
+  background: #151923;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.param-explanation small {
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .param-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .param-row label {
+    font-weight: 600;
+  }
+
+  .param-row small {
+    grid-column: 1;
+    margin-top: 0;
+  }
+}
+
+/* Style the select dropdown */
+select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #0d1017;
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* Disabled state for outlier params */
+#outlier-params.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Dataset banner — inherit your site's typography/colors */
+.status-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 16px;
+  padding: 6px 10px;
+
+  /* Inherit base font + color so it matches your site */
+  font: inherit;
+  color: inherit;
+
+  /* Subtle container: remove strong borders/background if they clash */
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.08);  /* very light keyline; tweak or remove */
+  border-radius: 8px;
+}
+
+/* Optional: make the labels slightly softer to blend in */
+.status-bar #ds-label,
+.status-bar #ds-rows {
+  opacity: 0.9;
+}
+
+/* Dataset banner */
+.status-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin: 8px 0 16px;
+  padding: 6px 10px;
+  font: inherit;             /* use your page font */
+  color: inherit;            /* use your page color */
+  background: transparent;   /* no clash with your theme */
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 10px;
+}
+
+/* Name = bold, primary */
+.status-bar .ds-name {
+  font-weight: 600;
+}
+
+/* ID = small & subtle */
+.status-bar .ds-id {
+  font-size: 12px;
+  opacity: 0.75;
+  margin-left: 8px;
+}
+
+/* Source badge */
+.status-bar .ds-src {
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.12);
+  opacity: 0.8;
+  margin-left: 8px;
+}
+
+/* Rows count */
+.status-bar .ds-rows {
+  opacity: 0.9;
+}
+
+/* app/static/css/virtual_table.css */
+.vt-container { height: 70vh; border: 1px solid #e5e7eb; border-radius: 8px; background: white; }
+.vt-header { backdrop-filter: blur(2px); }
+
+/* Add/replace these styles in your styles.css file for better autocomplete appearance */
+
+/* Address input container - ensure proper positioning */
+.address-wrap {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Address input styling */
+#address {
+  width: 300px;
+  max-width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #0d1017;
+  color: var(--text);
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+#address:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(77, 163, 255, 0.1);
+}
+
+/* Autocomplete dropdown - improved styling */
+#address-suggest-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-top: none;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+  border-radius: 0 0 10px 10px;
+  display: none;
+}
+
+/* Dropdown items */
+#address-suggest-dropdown .dropdown-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  background: transparent;
+  transition: all 0.15s ease;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+#address-suggest-dropdown .dropdown-item:last-child {
+  border-bottom: none;
+}
+
+#address-suggest-dropdown .dropdown-item:hover,
+#address-suggest-dropdown .dropdown-item.active {
+  background-color: var(--accent) !important;
+  color: #08111d !important;
+}
+
+/* Loading state */
+#address-suggest-dropdown .loading {
+  padding: 12px 16px;
+  color: var(--muted);
+  font-style: italic;
+  text-align: center;
+}
+
+/* No results state */
+#address-suggest-dropdown .no-results {
+  padding: 12px 16px;
+  color: var(--muted);
+  font-style: italic;
+  text-align: center;
+}
+
+/* Ensure proper spacing in the spatial filter section */
+.radius-grid .param-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.radius-grid label {
+  min-width: 120px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .address-wrap {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #address {
+    width: 100%;
+  }
+
+  #address-suggest-dropdown {
+    left: 0;
+    right: 0;
+  }
+}
+
+/* Add these styles to your static/styles.css file for better autocomplete appearance */
+
+/* Address input container positioning */
+.address-wrap {
+  position: relative;
+}
+
+/* Address input styling */
+#address {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border, #333);
+  border-radius: 6px;
+  background: var(--input-bg, #2a2a2a);
+  color: var(--text, white);
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+#address:focus {
+  outline: none;
+  border-color: var(--accent, #0066cc);
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+}
+
+#address::placeholder {
+  color: var(--muted, #888);
+  font-style: italic;
+}
+
+/* Dropdown styling */
+.dropdown {
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.dropdown-item {
+  transition: all 0.15s ease !important;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none !important;
+  border-radius: 0 0 10px 10px;
+}
+
+.dropdown-item:hover {
+  background-color: var(--accent, #0066cc) !important;
+  color: white !important;
+}
+
+.dropdown-item.active {
+  background-color: var(--accent, #0066cc) !important;
+  color: white !important;
+}
+
+/* Loading states */
+.dropdown-loading {
+  padding: 12px 16px;
+  text-align: center;
+  color: var(--muted, #888);
+  font-style: italic;
+}
+
+.dropdown-loading:after {
+  content: "...";
+  animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% {
+    color: rgba(0,0,0,0);
+    text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0);
+  }
+  40% {
+    color: var(--muted, #888);
+    text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0);
+  }
+  60% {
+    text-shadow: .25em 0 0 var(--muted, #888), .5em 0 0 rgba(0,0,0,0);
+  }
+  80%, 100% {
+    text-shadow: .25em 0 0 var(--muted, #888), .5em 0 0 var(--muted, #888);
+  }
+}
+
+/* Radius filter styling improvements */
+.radius-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+}
+
+.address-wrap {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+  align-items: end;
+}
+
+.address-wrap label {
+  grid-column: 1 / -1;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+#radius-km {
+  width: 100px;
+  padding: 10px 12px;
+  border: 1px solid var(--border, #333);
+  border-radius: 6px;
+  background: var(--input-bg, #2a2a2a);
+  color: var(--text, white);
+}
+
+#radius-btn {
+  white-space: nowrap;
+  padding: 10px 16px;
+}
