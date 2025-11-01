@@ -125,6 +125,22 @@ def load_csv_api():
     except Exception as e:
         return error(f"Drive API load failed: {e}", 500)
 
+@api_bp.post("/load_csv_url")
+def load_csv_url():
+    data = request.get_json(force=True) or {}
+    url = (data.get("url") or "").strip()
+    if not url:
+        return {"status": "error", "error": "missing_url"}, 400
+    try:
+        import requests
+        r = requests.get(url, timeout=180)
+        r.raise_for_status()
+        msg, cols, nrows = db.replace_data_table_from_csv_bytes(r.content)
+        set_dataset_info(source="remote_csv", label=url, row_count=nrows, columns=cols)
+        return {"status": "ok", "row_count": nrows, "columns": cols}
+    except Exception as e:
+        return {"status": "error", "error": str(e)}, 500
+
 # ---------- DRIVE BROWSING (OAuth) ----------
 @api_bp.post("/gdrive/list_folder")
 def gdrive_list_folder():
